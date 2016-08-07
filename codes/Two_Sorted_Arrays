@@ -1,0 +1,56 @@
+public class Solution {
+    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+
+        int l1 = nums1.length;
+        int l2 = nums2.length;
+        if ((l1 + l2) % 2 != 0) {
+            return findK(nums1, nums2, (l1+l2)/2+1);
+        } else {
+            return (findK(nums1, nums2, (l1+l2)/2) + findK(nums1, nums2, (l1+l2)/2+1))/2;
+        }
+
+    }
+
+    private double findK(int[] nums1, int[] nums2, int k) {
+        if (nums1.length == 0) {
+            return nums2[k-1];
+        }
+        if (nums2.length == 0) {
+            return nums1[k-1];
+        }
+        if (k == 1) {
+            return Math.min(nums1[0], nums2[0]);
+        }
+
+        int l = k/2;
+        int v1, v2;
+        boolean f1 = false, f2 = false;
+        if (l > nums1.length) {
+            v1 = nums1[nums1.length -1];
+            f1 = true;
+        } else {
+            v1 = nums1[l-1];
+        }
+
+        if (l > nums2.length) {
+            v2 = nums2[nums2.length -1];
+            f2 = true;
+        } else {
+            v2 = nums2[l-1];
+        }
+
+        if (v1 >= v2) {
+            if (f2) {
+                return findK(nums1, Arrays.copyOfRange(nums2, nums2.length, nums2.length), k-nums2.length);
+            } else {
+                return findK(nums1, Arrays.copyOfRange(nums2, l, nums2.length), k-l);
+            }
+        } else {
+            if (f1) {
+                return findK(Arrays.copyOfRange(nums1, nums1.length, nums1.length), nums2, k-nums1.length);
+            } else {
+                return findK(Arrays.copyOfRange(nums1, l, nums1.length), nums2, k-l);
+            }
+        }
+    }    
+}
